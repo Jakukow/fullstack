@@ -1,40 +1,19 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import CreatePost from "./pages/CreatePost";
+import Post from "./pages/Post";
 
+import "./index.css";
 function App() {
-  const [listOfPosts, setListOfPosts] = useState([]);
-
-  const FetchData = async () => {
-    try {
-      const { data } = await axios.get("http://localhost:3001/posts");
-      setListOfPosts(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    FetchData();
-  }, []);
-
-  if (!listOfPosts) {
-    return <div>Loading...</div>;
-  } else {
-    return (
-      <div>
-        {listOfPosts.map((list, index) => {
-          return (
-            <div key={index}>
-              <div>{list.title}</div>
-              <div>{list.postText}</div>
-              <div>{list.username}</div>
-              <br />
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Routes>
+        <Route index element={<Home />} />
+        <Route path="/createpost" element={<CreatePost />} />
+        <Route path="/post/:id" element={<Post />} />
+      </Routes>
+    </div>
+  );
 }
 
 export default App;

@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
   const Post = sequelize.define("Post", {
@@ -16,5 +16,10 @@ module.exports = (sequelize) => {
     },
   });
 
+  Post.associate = (models) => {
+    Post.hasMany(models.Comments, {
+      onDelete: "cascade",
+    });
+  };
   return Post;
 };
