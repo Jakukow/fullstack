@@ -2,7 +2,7 @@ import { useState } from "react";
 import TextField from "@mui/material/TextField";
 
 import { useForm, Controller } from "react-hook-form";
-import { Button } from "@mui/material";
+import { autocompleteClasses, Button, styled } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -23,21 +23,40 @@ const CreatePost = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      style={{
+        margin: "auto",
+
+        display: "flex",
+        justifyContent: "center",
+        height: "100vh",
+        gap: "1rem",
+
+        flexDirection: "column",
+        width: "20%",
+      }}
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Controller
         name="title"
         control={control}
-        render={({ field }) => <TextField label="Title" {...field} />}
+        render={({ field }) => (
+          <TextField autoComplete="false" label="Title" {...field} />
+        )}
       />
       <Controller
         name="postText"
         control={control}
-        render={({ field }) => <TextField label="Post Text" {...field} />}
+        render={({ field }) => (
+          <TextField autoComplete="false" label="Post Text" {...field} />
+        )}
       />
       <Controller
         name="username"
         control={control}
-        render={({ field }) => <TextField label="Username" {...field} />}
+        render={({ field }) => (
+          <TextField autoComplete="false" label="Username" {...field} />
+        )}
       />
       <Button type="submit" variant="outlined">
         Create new Post

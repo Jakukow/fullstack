@@ -25,9 +25,21 @@ const Home = () => {
 
   return (
     <div className="container">
-      <header>
+      <nav
+        style={{
+          display: "flex",
+          padding: "1rem",
+          justifyContent: "space-around",
+          width: "100%",
+          boxShadow: "rgba(0, 0, 0, 0.18) 0px 2px 4px",
+        }}
+      >
         <Button onClick={() => navigate("/createpost")}>Create new post</Button>
-      </header>
+        <div>
+          <Button onClick={() => navigate("/login")}>Login In</Button>
+          <Button onClick={() => navigate("/sigin")}>Sign in</Button>
+        </div>
+      </nav>
       <div>
         {listOfPosts.map((list, index) => {
           return (

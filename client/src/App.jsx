@@ -4,6 +4,8 @@ import CreatePost from "./pages/CreatePost";
 import Post from "./pages/Post";
 
 import "./index.css";
+import { Login } from "./pages/Login";
+import Sigin from "./pages/Sigin";
 function App() {
   return (
     <div>
@@ -11,6 +13,8 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/createpost" element={<CreatePost />} />
         <Route path="/post/:id" element={<Post />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/sigin" element={<Sigin />} />
       </Routes>
     </div>
   );
