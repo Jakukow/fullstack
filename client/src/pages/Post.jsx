@@ -18,11 +18,19 @@ const Post = () => {
 
   const addComment = async () => {
     try {
-      const { data } = await axios.post("http://localhost:3001/comments/", {
-        commentBody: newComment,
-        PostId: id,
-      });
-      console.log(data);
+      const { data } = await axios.post(
+        "http://localhost:3001/comments/",
+        {
+          commentBody: newComment,
+          PostId: id,
+        },
+        {
+          headers: {
+            accessToken: sessionStorage.getItem("accessToken"),
+          },
+        }
+      );
+      if (data.error) return alert(data.error);
       setNewComment("");
       setPostComments([...postComments, data]);
     } catch (error) {

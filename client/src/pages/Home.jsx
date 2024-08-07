@@ -36,11 +36,13 @@ const Home = () => {
       >
         <Button onClick={() => navigate("/createpost")}>Create new post</Button>
         <div>
-          <Button onClick={() => navigate("/login")}>Login In</Button>
-          <Button onClick={() => navigate("/sigin")}>Sign in</Button>
+          <Button onClick={() => navigate("/login")}>Log In</Button>
+          <Button onClick={() => navigate("/sigin")}>Sign Up</Button>
         </div>
       </nav>
-      <div>
+      <main
+        style={{ display: "flex", justifyContent: "center", width: "100%" }}
+      >
         {listOfPosts.map((list, index) => {
           return (
             <div
@@ -55,7 +57,7 @@ const Home = () => {
             </div>
           );
         })}
-      </div>
+      </main>
     </div>
   );
 };
