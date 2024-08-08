@@ -41,7 +41,13 @@ const Home = () => {
         </div>
       </nav>
       <main
-        style={{ display: "flex", justifyContent: "center", width: "100%" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
         {listOfPosts.map((list, index) => {
           return (
@@ -50,9 +56,20 @@ const Home = () => {
               key={index}
               onClick={() => navigate(`/post/${list.id}`)}
             >
-              <div>{list.title}</div>
+              <div style={{ width: "100%" }}>
+                <strong>{list.title}</strong>
+                <hr />
+              </div>
               <div>{list.postText}</div>
-              <div>{list.username}</div>
+              <div
+                style={{
+                  alignSelf: "flex-end",
+                  justifySelf: "flex-end",
+                  fontSize: "0.8rem",
+                }}
+              >
+                <p>@{list.username}</p>
+              </div>
               <br />
             </div>
           );

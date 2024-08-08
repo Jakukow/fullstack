@@ -2,8 +2,10 @@ import { Button, TextField } from "@mui/material";
 import axios from "axios";
 
 import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const Sigin = () => {
+  const navigate = useNavigate();
   const { control, handleSubmit } = useForm({
     defaultValues: {
       username: "",
@@ -49,6 +51,16 @@ const Sigin = () => {
         />
         <Button type="submit" variant="outlined">
           Create New User
+        </Button>
+        <Button
+          onClick={() => navigate("/login")}
+          type="button"
+          variant="outlined"
+        >
+          Log In
+        </Button>
+        <Button onClick={() => navigate("/")} type="button" variant="outlined">
+          Home Page
         </Button>
       </form>
     </main>

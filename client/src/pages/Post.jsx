@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Post = () => {
   const { id } = useParams();
@@ -40,6 +40,7 @@ const Post = () => {
   const [postDetails, setPostDetails] = useState("");
   const [postComments, setPostComments] = useState("");
   const [newComment, setNewComment] = useState("");
+  const navigate = useNavigate();
   const FetchData = async () => {
     try {
       const { data } = await axios.get(
@@ -61,32 +62,84 @@ const Post = () => {
   };
 
   return (
-    <div>
-      <Typography>{postDetails.title}</Typography>
-      <TextField
-        type="text"
-        placeholder="Put your comment down"
-        onChange={(e) => setNewComment(e.target.value)}
-        value={newComment}
-      />
-      <Button onClick={addComment} size="large">
-        Add Comment
-      </Button>
-      <br />
-      <div>
-        {postComments ? (
-          postComments.map((comment, key) => {
-            return (
-              <Card key={key}>
-                <CardContent>
-                  <Typography> {comment.commentBody}</Typography>
-                </CardContent>
-              </Card>
-            );
-          })
-        ) : (
-          <p> No comments</p>
-        )}
+    <div style={{ display: "flex", width: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "2rem",
+          width: "50%",
+          padding: "2rem",
+        }}
+      >
+        <Card
+          sx={{
+            width: "100%",
+            textAlign: "center",
+            height: "70vh",
+            boxShadow:
+              "rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,  rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <CardContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography> {postDetails.title}</Typography>
+
+            <Typography> {postDetails.postText}</Typography>
+            <Typography> {postDetails.username}</Typography>
+          </CardContent>
+        </Card>
+        <Button
+          onClick={() => {
+            navigate("/");
+          }}
+          variant="outlined"
+        >
+          Home Page
+        </Button>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          padding: "2rem",
+        }}
+      >
+        <div style={{ display: "flex", gap: "1rem" }}>
+          <TextField
+            type="text"
+            placeholder="Put your comment down"
+            onChange={(e) => setNewComment(e.target.value)}
+            value={newComment}
+          />
+          <Button variant="outlined" onClick={addComment} size="large">
+            Add Comment
+          </Button>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+          {postComments.length !== 0 ? (
+            postComments.map((comment, key) => {
+              return (
+                <Card key={key}>
+                  <CardContent>
+                    <Typography> {comment.commentBody}</Typography>
+                  </CardContent>
+                </Card>
+              );
+            })
+          ) : (
+            <p> No comments</p>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -37,7 +37,16 @@ export const Login = () => {
         alignItems: "center",
       }}
     >
-      <div>
+      <div
+        style={{
+          boxShadow:
+            "rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset",
+          padding: "2rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+      >
         <div style={{ display: "flex", gap: "2rem", marginBottom: "1rem" }}>
           <Input
             type="text"
@@ -53,8 +62,22 @@ export const Login = () => {
           />
         </div>
 
-        <Button onClick={login} sx={{ width: "100%" }}>
+        <Button onClick={login} variant="outlined" sx={{ width: "100%" }}>
           Log In
+        </Button>
+        <Button
+          onClick={() => navigate("/sigin")}
+          variant="outlined"
+          sx={{ width: "100%" }}
+        >
+          Sign up
+        </Button>
+        <Button
+          onClick={() => navigate("/")}
+          variant="outlined"
+          sx={{ width: "100%" }}
+        >
+          HOME PAGE
         </Button>
       </div>
     </div>

@@ -22,45 +22,62 @@ const CreatePost = () => {
   };
 
   return (
-    <form
+    <div
       style={{
-        margin: "auto",
-
         display: "flex",
         justifyContent: "center",
         height: "100vh",
-        gap: "1rem",
-
-        flexDirection: "column",
-        width: "20%",
+        alignItems: "center",
       }}
-      onSubmit={handleSubmit(onSubmit)}
     >
-      <Controller
-        name="title"
-        control={control}
-        render={({ field }) => (
-          <TextField autoComplete="false" label="Title" {...field} />
-        )}
-      />
-      <Controller
-        name="postText"
-        control={control}
-        render={({ field }) => (
-          <TextField autoComplete="false" label="Post Text" {...field} />
-        )}
-      />
-      <Controller
-        name="username"
-        control={control}
-        render={({ field }) => (
-          <TextField autoComplete="false" label="Username" {...field} />
-        )}
-      />
-      <Button type="submit" variant="outlined">
-        Create new Post
-      </Button>
-    </form>
+      <form
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          padding: "2rem",
+          gap: "1rem",
+
+          width: "20%",
+          boxShadow:
+            "rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset",
+        }}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Controller
+          name="title"
+          control={control}
+          render={({ field }) => (
+            <TextField autoComplete="false" label="Title" {...field} />
+          )}
+        />
+        <Controller
+          name="postText"
+          control={control}
+          render={({ field }) => (
+            <TextField autoComplete="false" label="Post Text" {...field} />
+          )}
+        />
+        <Controller
+          name="username"
+          control={control}
+          render={({ field }) => (
+            <TextField autoComplete="false" label="Username" {...field} />
+          )}
+        />
+        <Button type="submit" variant="outlined">
+          Create new Post
+        </Button>
+        <Button
+          onClick={() => {
+            navigate("/");
+          }}
+          type="button"
+          variant="outlined"
+        >
+          Homepage
+        </Button>
+      </form>
+    </div>
   );
 };
 
