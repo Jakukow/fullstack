@@ -2,14 +2,18 @@ import axios from "axios";
 import { createContext, useContext, useState } from "react";
 
 const initialState = {
-  authState: false,
+  username: "",
+  id: 0,
+  status: false,
 };
 
 const AuthContext = createContext(initialState);
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
-  const [authState, setAuthState] = useState(false);
+  const [authState, setAuthState] = useState({
+    ...initialState,
+  });
 
   const checkAuth = async () => {
     try {
@@ -19,9 +23,13 @@ export const AuthProvider = ({ children }) => {
         },
       });
       if (data.error) {
-        setAuthState(false);
+        setAuthState({ ...authState, status: false });
       } else {
-        setAuthState(true);
+        setAuthState({
+          username: data.username,
+          id: data.id,
+          status: true,
+        });
       }
     } catch (error) {
       console.log(error);

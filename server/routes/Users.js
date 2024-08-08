@@ -30,7 +30,7 @@ router.post("/login", async (req, res) => {
         { username: user.username, id: user.id },
         "secret"
       );
-      res.json(accessToken);
+      res.json({ token: accessToken, username: username.id, id: user.id });
     } catch (error) {
       console.log("error");
     }

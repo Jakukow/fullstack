@@ -1,13 +1,18 @@
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../helpers/AuthContext";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const Home = () => {
   const [listOfPosts, setListOfPosts] = useState([]);
-  const { authState, checkAuth } = useAuth();
+  const { setAuthState, authState, checkAuth } = useAuth();
   const navigate = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    setAuthState({ username: "", id: 0, status: false });
+  };
   const FetchData = async () => {
     try {
       const { data } = await axios.get("http://localhost:3001/posts");
@@ -38,7 +43,20 @@ const Home = () => {
         }}
       >
         <Button onClick={() => navigate("/createpost")}>Create new post</Button>
-        {!authState && (
+        {authState.status ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            <p>Hello {authState.username}! </p>
+            <IconButton aria-label="logout" color="primary" onClick={logout}>
+              <LogoutIcon />
+            </IconButton>
+          </div>
+        ) : (
           <div>
             <Button onClick={() => navigate("/login")}>Log In</Button>
             <Button onClick={() => navigate("/sigin")}>Sign Up</Button>

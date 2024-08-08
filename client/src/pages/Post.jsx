@@ -2,19 +2,40 @@ import {
   Button,
   Card,
   CardContent,
+  IconButton,
   TextField,
   Typography,
 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import useAuth from "../helpers/AuthContext";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const Post = () => {
   const { id } = useParams();
+  const { authState, checkAuth } = useAuth();
 
   useEffect(() => {
     FetchData();
+    checkAuth();
   }, []);
+
+  const deleteComment = async (id, key) => {
+    try {
+      const { data } = await axios.delete(
+        `http://localhost:3001/comments/${id}`,
+        {
+          headers: { accessToken: localStorage.getItem("accessToken") },
+        }
+      );
+      console.log(data);
+      const updatedComments = postComments.toSpliced(key, 1);
+      setPostComments([...updatedComments]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const addComment = async () => {
     try {
@@ -32,6 +53,7 @@ const Post = () => {
       );
       if (data.error) return alert(data.error);
       setNewComment("");
+      console.log(data);
       setPostComments([...postComments, data]);
     } catch (error) {
       console.log(error);
@@ -131,7 +153,17 @@ const Post = () => {
               return (
                 <Card key={key}>
                   <CardContent>
-                    <Typography> {comment.commentBody}</Typography>
+                    <Typography>
+                      {comment.commentBody}{" "}
+                      {authState.username === comment.username && (
+                        <IconButton
+                          onClick={() => deleteComment(comment.id, key)}
+                        >
+                          <ClearIcon />
+                        </IconButton>
+                      )}
+                    </Typography>
+
                     <Typography
                       sx={{
                         fontSize: "small",
