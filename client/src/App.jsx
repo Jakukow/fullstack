@@ -6,16 +6,20 @@ import Post from "./pages/Post";
 import "./index.css";
 import { Login } from "./pages/Login";
 import Sigin from "./pages/Sigin";
+import { AuthProvider } from "./helpers/AuthContext";
+
 function App() {
   return (
     <div>
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path="/createpost" element={<CreatePost />} />
-        <Route path="/post/:id" element={<Post />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/sigin" element={<Sigin />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="/createpost" element={<CreatePost />} />
+          <Route path="/post/:id" element={<Post />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/sigin" element={<Sigin />} />
+        </Routes>
+      </AuthProvider>
     </div>
   );
 }

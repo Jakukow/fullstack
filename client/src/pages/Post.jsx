@@ -26,7 +26,7 @@ const Post = () => {
         },
         {
           headers: {
-            accessToken: sessionStorage.getItem("accessToken"),
+            accessToken: localStorage.getItem("accessToken"),
           },
         }
       );
@@ -132,6 +132,16 @@ const Post = () => {
                 <Card key={key}>
                   <CardContent>
                     <Typography> {comment.commentBody}</Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "small",
+                        textAlign: "end",
+                        marginTop: "0.2rem",
+                      }}
+                    >
+                      {" "}
+                      @ {comment.username}
+                    </Typography>
                   </CardContent>
                 </Card>
               );

@@ -1,10 +1,12 @@
 import { Button } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../helpers/AuthContext";
 
 const Home = () => {
   const [listOfPosts, setListOfPosts] = useState([]);
+  const { authState, checkAuth } = useAuth();
   const navigate = useNavigate();
   const FetchData = async () => {
     try {
@@ -17,6 +19,7 @@ const Home = () => {
 
   useEffect(() => {
     FetchData();
+    checkAuth();
   }, []);
 
   if (!listOfPosts) {
@@ -35,10 +38,12 @@ const Home = () => {
         }}
       >
         <Button onClick={() => navigate("/createpost")}>Create new post</Button>
-        <div>
-          <Button onClick={() => navigate("/login")}>Log In</Button>
-          <Button onClick={() => navigate("/sigin")}>Sign Up</Button>
-        </div>
+        {!authState && (
+          <div>
+            <Button onClick={() => navigate("/login")}>Log In</Button>
+            <Button onClick={() => navigate("/sigin")}>Sign Up</Button>
+          </div>
+        )}
       </nav>
       <main
         style={{
