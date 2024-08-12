@@ -1,8 +1,8 @@
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
 
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Sigin = () => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const Sigin = () => {
         style={{
           display: "flex",
           flexDirection: "column",
-          width: "20%",
+          width: "40%",
           gap: "2rem",
           margin: "auto",
           marginTop: "10%",
@@ -50,18 +50,14 @@ const Sigin = () => {
           )}
         />
         <Button type="submit" variant="outlined">
-          Create New User
+          Register
         </Button>
-        <Button
-          onClick={() => navigate("/login")}
-          type="button"
-          variant="outlined"
-        >
-          Log In
-        </Button>
-        <Button onClick={() => navigate("/")} type="button" variant="outlined">
-          Home Page
-        </Button>
+        <Typography sx={{ fontSize: "small", textAlign: "center" }}>
+          Already have account?{" "}
+          <Link to="/login">
+            <strong>Log in!</strong>
+          </Link>
+        </Typography>
       </form>
     </main>
   );

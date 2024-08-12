@@ -1,7 +1,7 @@
-import { Button, Input } from "@mui/material";
+import { Button, Input, Typography } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../helpers/AuthContext";
 
 export const Login = () => {
@@ -72,20 +72,12 @@ export const Login = () => {
         <Button onClick={login} variant="outlined" sx={{ width: "100%" }}>
           Log In
         </Button>
-        <Button
-          onClick={() => navigate("/sigin")}
-          variant="outlined"
-          sx={{ width: "100%" }}
-        >
-          Sign up
-        </Button>
-        <Button
-          onClick={() => navigate("/")}
-          variant="outlined"
-          sx={{ width: "100%" }}
-        >
-          HOME PAGE
-        </Button>
+        <Typography sx={{ fontSize: "small", textAlign: "center" }}>
+          Don't have account?{" "}
+          <Link to="/sigin">
+            <strong>Sign Up!</strong>
+          </Link>
+        </Typography>
       </div>
     </div>
   );

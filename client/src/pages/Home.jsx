@@ -23,13 +23,16 @@ const Home = () => {
       });
       console.log(data);
       setListOfPosts(data.listOfPosts);
-      setLikedPosts(data.likedPosts);
+      setLikedPosts(data.likedPosts.map((like) => like.PostId));
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
+    if (!authState.status) {
+      navigate("/login");
+    }
     FetchData();
     checkAuth();
   }, []);
@@ -54,6 +57,11 @@ const Home = () => {
           } else return post;
         })
       );
+      if (likedPosts.includes(id)) {
+        setLikedPosts(likedPosts.filter((ids) => ids != id));
+      } else {
+        setLikedPosts([...likedPosts, id]);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -134,7 +142,11 @@ const Home = () => {
                     color="primary"
                     onClick={() => likeAPost(list.id)}
                   >
-                    <FavoriteIcon />
+                    {likedPosts.includes(list.id) ? (
+                      <FavoriteIcon />
+                    ) : (
+                      <FavoriteBorderIcon />
+                    )}
                   </IconButton>
                 </div>
               </div>
