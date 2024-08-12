@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { Post } = require("../models");
+const { Post, Likes } = require("../models");
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
-router.get("/", async (req, res) => {
+router.get("/", validateToken, async (req, res) => {
   try {
-    const listofPosts = await Post.findAll();
-    res.json(listofPosts);
+    const listOfPosts = await Post.findAll({ include: [Likes] });
+    const likedPosts = await Likes.findAll({ where: { UserId: req.user.id } });
+    res.json({ listOfPosts, likedPosts });
   } catch (error) {
     console.log(error);
   }

@@ -22,10 +22,12 @@
   margin-top: 2rem;
   margin-bottom: 0.5rem;
   text-align: center;
+}
+.title {
   cursor: pointer;
   transition: 0.2s;
 }
-.card:hover {
+.title:hover {
   opacity: 0.5;
   transform: scale(1, 1);
 }

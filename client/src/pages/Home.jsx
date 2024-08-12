@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../helpers/AuthContext";
 import LogoutIcon from "@mui/icons-material/Logout";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const Home = () => {
   const [listOfPosts, setListOfPosts] = useState([]);
+  const [likedPosts, setLikedPosts] = useState([]);
   const { setAuthState, authState, checkAuth } = useAuth();
   const navigate = useNavigate();
   const logout = () => {
@@ -15,8 +18,12 @@ const Home = () => {
   };
   const FetchData = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3001/posts");
-      setListOfPosts(data);
+      const { data } = await axios.get("http://localhost:3001/posts", {
+        headers: { accessToken: localStorage.getItem("accessToken") },
+      });
+      console.log(data);
+      setListOfPosts(data.listOfPosts);
+      setLikedPosts(data.likedPosts);
     } catch (error) {
       console.log(error);
     }
@@ -26,6 +33,31 @@ const Home = () => {
     FetchData();
     checkAuth();
   }, []);
+
+  const likeAPost = async (id) => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3001/like",
+        { PostId: id },
+        { headers: { accessToken: localStorage.getItem("accessToken") } }
+      );
+
+      setListOfPosts(
+        listOfPosts.map((post) => {
+          if (post.id === id) {
+            if (data.liked) return { ...post, Likes: [...post.Likes, 0] };
+            else {
+              const likesArray = post.Likes;
+              likesArray.pop();
+              return { ...post, Likes: likesArray };
+            }
+          } else return post;
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (!listOfPosts) {
     return <div>Loading...</div>;
@@ -74,26 +106,38 @@ const Home = () => {
       >
         {listOfPosts.map((list, index) => {
           return (
-            <div
-              className="card"
-              key={index}
-              onClick={() => navigate(`/post/${list.id}`)}
-            >
-              <div style={{ width: "100%" }}>
+            <div className="card" key={index}>
+              <div
+                onClick={() => navigate(`/post/${list.id}`)}
+                style={{ width: "100%" }}
+                className="title"
+              >
                 <strong>{list.title}</strong>
+
                 <hr />
               </div>
               <div>{list.postText}</div>
               <div
                 style={{
-                  alignSelf: "flex-end",
-                  justifySelf: "flex-end",
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                   fontSize: "0.8rem",
                 }}
               >
                 <p>@{list.username}</p>
+                <div style={{ style: "flex" }}>
+                  <span>{list.Likes.length}</span>
+                  <IconButton
+                    aria-label="like"
+                    color="primary"
+                    onClick={() => likeAPost(list.id)}
+                  >
+                    <FavoriteIcon />
+                  </IconButton>
+                </div>
               </div>
-              <br />
             </div>
           );
         })}
