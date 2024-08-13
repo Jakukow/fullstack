@@ -15,13 +15,14 @@ const Home = () => {
   const logout = () => {
     localStorage.removeItem("accessToken");
     setAuthState({ username: "", id: 0, status: false });
+    navigate("/login");
   };
   const FetchData = async () => {
     try {
       const { data } = await axios.get("http://localhost:3001/posts", {
         headers: { accessToken: localStorage.getItem("accessToken") },
       });
-      console.log(data);
+
       setListOfPosts(data.listOfPosts);
       setLikedPosts(data.likedPosts.map((like) => like.PostId));
     } catch (error) {
@@ -30,9 +31,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (!authState.status) {
-      navigate("/login");
-    }
     FetchData();
     checkAuth();
   }, []);

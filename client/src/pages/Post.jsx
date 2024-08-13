@@ -21,6 +21,17 @@ const Post = () => {
     checkAuth();
   }, []);
 
+  const deletePost = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3001/posts/${id}`, {
+        headers: { accessToken: localStorage.getItem("accessToken") },
+      });
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const deleteComment = async (id, key) => {
     try {
       const { data } = await axios.delete(
@@ -118,14 +129,30 @@ const Post = () => {
             <Typography> {postDetails.username}</Typography>
           </CardContent>
         </Card>
-        <Button
-          onClick={() => {
-            navigate("/");
-          }}
-          variant="outlined"
-        >
-          Home Page
-        </Button>
+
+        <div style={{ display: "flex", width: "100%", gap: "1rem" }}>
+          <Button
+            sx={{ width: "50%" }}
+            onClick={() => {
+              navigate("/");
+            }}
+            variant="outlined"
+          >
+            Home Page
+          </Button>
+          {postDetails.username === authState.username && (
+            <Button
+              sx={{ width: "50%" }}
+              onClick={() => {
+                deletePost(postDetails.id);
+              }}
+              variant="outlined"
+              color="error"
+            >
+              Delete post
+            </Button>
+          )}
+        </div>
       </div>
       <div
         style={{

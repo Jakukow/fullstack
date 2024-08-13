@@ -19,12 +19,25 @@ router.get("/byId/:id", async (req, res) => {
   res.json(post);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validateToken, async (req, res) => {
   try {
     const post = req.body;
-
+    post.username = req.user.username;
     await Post.create(post);
     res.json(post);
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.delete("/:postId", validateToken, async (req, res) => {
+  const postId = req.params.postId;
+  try {
+    await Post.destroy({
+      where: {
+        id: postId,
+      },
+    });
+    res.json("post deleted");
   } catch (error) {
     console.log(error);
   }

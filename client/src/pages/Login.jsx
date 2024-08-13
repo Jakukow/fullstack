@@ -75,7 +75,7 @@ export const Login = () => {
         <Typography sx={{ fontSize: "small", textAlign: "center" }}>
           Don't have account?{" "}
           <Link to="/sigin">
-            <strong>Sign Up!</strong>
+            <strong> Sign Up!</strong>
           </Link>
         </Typography>
       </div>

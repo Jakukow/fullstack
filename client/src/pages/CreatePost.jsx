@@ -4,21 +4,31 @@ import { useForm, Controller } from "react-hook-form";
 import { Button } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../helpers/AuthContext";
+import { useEffect } from "react";
 
 const CreatePost = () => {
+  const { checkAuth } = useAuth();
   const navigate = useNavigate();
   const { control, handleSubmit } = useForm({
     defaultValues: {
       title: "",
       postText: "",
-      username: "",
     },
   });
-  const onSubmit = (data) => {
-    axios.post("http://localhost:3001/posts", data).then((response) => {
-      console.log(response);
+  useEffect(() => {
+    checkAuth();
+  }, []);
+  const onSubmit = async (data) => {
+    try {
+      await axios.post("http://localhost:3001/posts", data, {
+        headers: { accessToken: localStorage.getItem("accessToken") },
+      });
+
       navigate("/");
-    });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -57,13 +67,7 @@ const CreatePost = () => {
             <TextField autoComplete="false" label="Post Text" {...field} />
           )}
         />
-        <Controller
-          name="username"
-          control={control}
-          render={({ field }) => (
-            <TextField autoComplete="false" label="Username" {...field} />
-          )}
-        />
+
         <Button type="submit" variant="outlined">
           Create new Post
         </Button>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   username: "",
@@ -11,6 +12,7 @@ const AuthContext = createContext(initialState);
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [authState, setAuthState] = useState({
     ...initialState,
   });
@@ -24,6 +26,7 @@ export const AuthProvider = ({ children }) => {
       });
       if (data.error) {
         setAuthState({ ...authState, status: false });
+        navigate("/login");
       } else {
         setAuthState({
           username: data.username,
