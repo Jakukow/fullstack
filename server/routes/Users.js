@@ -41,4 +41,6 @@ router.get("/auth", validateToken, (req, res) => {
   res.json(req.user);
 });
 
+router.get("/basicinfo",);
+
 module.exports = router;

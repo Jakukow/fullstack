@@ -8,6 +8,7 @@ import { Login } from "./pages/Login";
 import Sigin from "./pages/Sigin";
 import { AuthProvider } from "./helpers/AuthContext";
 import PageNotFound from "./pages/PageNotFound";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/createpost" element={<CreatePost />} />
           <Route path="/post/:id" element={<Post />} />
-
+          <Route path="/profile/:id" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sigin" element={<Sigin />} />
           <Route path="*" element={<PageNotFound />} />
