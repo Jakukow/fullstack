@@ -21,7 +21,10 @@ router.get("/byId/:id", async (req, res) => {
 
 router.get("/byUserId/:id", async (req, res) => {
   const id = req.params.id;
-  const listOfPosts = await await Post.findAll({ where: { UserId: id } });
+  const listOfPosts = await await Post.findAll({
+    where: { UserId: id },
+    include: [Likes],
+  });
   res.json(listOfPosts);
 });
 
