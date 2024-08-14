@@ -21,6 +21,12 @@ const Post = () => {
     checkAuth();
   }, []);
 
+  const editPost = async (option) => {
+    if (option === 1) {
+      let newTitle = prompt("Enter New title:");
+    }
+  };
+
   const deletePost = async (id) => {
     try {
       await axios.delete(`http://localhost:3001/posts/${id}`, {
@@ -123,9 +129,23 @@ const Post = () => {
               justifyContent: "space-between",
             }}
           >
-            <Typography> {postDetails.title}</Typography>
+            <Typography
+              onClick={() => {
+                editPost(1);
+              }}
+            >
+              {" "}
+              {postDetails.title}
+            </Typography>
 
-            <Typography> {postDetails.postText}</Typography>
+            <Typography
+              onClick={() => {
+                editPost(2);
+              }}
+            >
+              {" "}
+              {postDetails.postText}
+            </Typography>
             <Typography> {postDetails.username}</Typography>
           </CardContent>
         </Card>
