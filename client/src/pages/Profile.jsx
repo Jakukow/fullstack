@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { Button } from "@mui/material";
+import useAuth from "../helpers/AuthContext";
 
 const Profile = () => {
   const navigate = useNavigate();
   let { id } = useParams();
   const [username, setUsername] = useState("");
   const [listOfPosts, setListOfPosts] = useState("");
+  const { authState } = useAuth();
 
   const fetchPostsData = async () => {
     try {
@@ -47,9 +50,34 @@ const Profile = () => {
         alignItems: "center",
       }}
     >
-      <div>
-        Welcome on <strong>{username} </strong> profile
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <p>
+          Welcome on <strong> {username} </strong> profile
+        </p>
+        {username === authState.username ? (
+          <Button
+            sx={{ display: "flex" }}
+            onClick={() => {
+              navigate("/changePassword");
+            }}
+          >
+            Change Password
+          </Button>
+        ) : null}
       </div>
+      {listOfPosts.length === 0 ? (
+        <h1>
+          {" "}
+          <strong>No content related to user</strong>
+        </h1>
+      ) : null}
       {listOfPosts.map((list, index) => {
         return (
           <div className="card" key={index}>

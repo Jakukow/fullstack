@@ -22,8 +22,32 @@ const Post = () => {
   }, []);
 
   const editPost = async (option) => {
-    if (option === 1) {
-      let newTitle = prompt("Enter New title:");
+    if (option === "postText") {
+      let newPostText = prompt("Enter New Text:");
+      axios.put(
+        `http://localhost:3001/posts/${option}`,
+        {
+          newText: newPostText,
+          id: id,
+        },
+        {
+          headers: { accessToken: localStorage.getItem("accessToken") },
+        }
+      );
+      setPostDetails({ ...postDetails, postText: newPostText });
+    } else {
+      let newTitle = prompt("Enter New Title:");
+      axios.put(
+        `http://localhost:3001/posts/${option}`,
+        {
+          newTitle: newTitle,
+          id: id,
+        },
+        {
+          headers: { accessToken: localStorage.getItem("accessToken") },
+        }
+      );
+      setPostDetails({ ...postDetails, title: newTitle });
     }
   };
 
@@ -131,7 +155,8 @@ const Post = () => {
           >
             <Typography
               onClick={() => {
-                editPost(1);
+                if (postDetails.username === authState.username)
+                  editPost("title");
               }}
             >
               {" "}
@@ -140,7 +165,8 @@ const Post = () => {
 
             <Typography
               onClick={() => {
-                editPost(2);
+                if (postDetails.username === authState.username)
+                  editPost("postText");
               }}
             >
               {" "}

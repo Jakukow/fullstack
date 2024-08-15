@@ -89,7 +89,10 @@ const Home = () => {
               gap: "1rem",
             }}
           >
-            <p>Hello {authState.username}! </p>
+            <p>
+              Hello{" "}
+              <Link to={`/profile/${authState.id}`}>{authState.username}!</Link>{" "}
+            </p>
             <IconButton aria-label="logout" color="primary" onClick={logout}>
               <LogoutIcon />
             </IconButton>

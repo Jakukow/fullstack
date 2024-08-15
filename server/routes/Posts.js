@@ -39,6 +39,29 @@ router.post("/", validateToken, async (req, res) => {
     console.log(error);
   }
 });
+
+router.put("/title", validateToken, async (req, res) => {
+  try {
+    const { newTitle, id } = req.body;
+    await Post.update({ title: newTitle }, { where: { id: id } });
+
+    res.json(newTitle);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.put("/postText", validateToken, async (req, res) => {
+  try {
+    const { newText, id } = req.body;
+    await Post.update({ postText: newText }, { where: { id: id } });
+
+    res.json(newTitle);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 router.delete("/:postId", validateToken, async (req, res) => {
   const postId = req.params.postId;
   try {

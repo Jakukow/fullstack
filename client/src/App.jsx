@@ -9,6 +9,7 @@ import Sigin from "./pages/Sigin";
 import { AuthProvider } from "./helpers/AuthContext";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sigin" element={<Sigin />} />
+          <Route path="/changePassword" element={<ChangePassword />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </AuthProvider>
