@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@mui/material";
+import { Alert, Button, IconButton, Snackbar } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,7 +10,17 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 const Home = () => {
   const [listOfPosts, setListOfPosts] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]);
-  const { setAuthState, authState, checkAuth } = useAuth();
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const { setAuthState, authState, checkAuth, setOpen, open, textNotify } =
+    useAuth();
   const navigate = useNavigate();
   const logout = () => {
     localStorage.removeItem("accessToken");
@@ -80,7 +90,9 @@ const Home = () => {
           boxShadow: "rgba(0, 0, 0, 0.18) 0px 2px 4px",
         }}
       >
-        <Button onClick={() => navigate("/createpost")}>Create new post</Button>
+        <Button variant="outlined" onClick={() => navigate("/createpost")}>
+          Create new post
+        </Button>
         {authState.status ? (
           <div
             style={{
@@ -122,10 +134,9 @@ const Home = () => {
                 className="title"
               >
                 <strong>{list.title}</strong>
-
-                <hr />
               </div>
               <div>{list.postText}</div>
+
               <div
                 style={{
                   display: "flex",
@@ -157,6 +168,16 @@ const Home = () => {
           );
         })}
       </main>
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {textNotify}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

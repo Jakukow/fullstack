@@ -1,15 +1,16 @@
-import { Button, TextField } from "@mui/material";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { Button, TextField } from "@mui/material";
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [open, setOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isError, setIsError] = useState(false);
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -37,6 +38,7 @@ const ChangePassword = () => {
       );
       console.log(data);
       if (data.error) {
+        setIsError(true);
         setErrorMsg(data.error);
         setOpen(true);
       }
@@ -67,16 +69,20 @@ const ChangePassword = () => {
         <h1>
           <strong>Change Your Password</strong>
         </h1>
-        <div style={{ display: "flex", gap: "1rem" }}>
+        <form onSubmit={changePass} style={{ display: "flex", gap: "1rem" }}>
           <TextField
+            required
+            error={isError}
             value={oldPassword}
             type="password"
             placeholder="Old Password"
             onChange={(e) => {
+              if (isError) setIsError(false);
               setOldPassword(e.target.value);
             }}
           />
           <TextField
+            required
             type="password"
             placeholder="New Password"
             value={newPassword}
@@ -84,10 +90,10 @@ const ChangePassword = () => {
               setNewPassword(e.target.value);
             }}
           />
-        </div>
-        <Button variant="outlined" onClick={changePass}>
-          Save Changes
-        </Button>
+          <Button type="submit" variant="outlined">
+            Save Changes
+          </Button>
+        </form>
       </div>
       <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
         <Alert

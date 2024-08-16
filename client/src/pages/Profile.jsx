@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import useAuth from "../helpers/AuthContext";
 
 const Profile = () => {
@@ -61,17 +61,30 @@ const Profile = () => {
         <p>
           Welcome on <strong> {username} </strong> profile
         </p>
-        {username === authState.username ? (
+        <Box display="flex" gap="1rem">
+          {username === authState.username ? (
+            <Button
+              variant="outlined"
+              sx={{ display: "flex" }}
+              onClick={() => {
+                navigate("/changePassword");
+              }}
+            >
+              Change Password
+            </Button>
+          ) : null}
           <Button
-            sx={{ display: "flex" }}
             onClick={() => {
-              navigate("/changePassword");
+              navigate("/");
             }}
+            type="button"
+            variant="outlined"
           >
-            Change Password
+            Homepage
           </Button>
-        ) : null}
+        </Box>
       </div>
+
       {listOfPosts.length === 0 ? (
         <h1>
           {" "}

@@ -1,8 +1,11 @@
 import {
+  Alert,
+  Box,
   Button,
   Card,
   CardContent,
   IconButton,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -11,15 +14,50 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../helpers/AuthContext";
 import ClearIcon from "@mui/icons-material/Clear";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Controller, useForm } from "react-hook-form";
+
+const schema = yup
+  .object()
+  .shape({
+    newComment: yup.string().required("Comment is required"),
+  })
+  .required();
 
 const Post = () => {
+  const {
+    control,
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      newComment: "",
+    },
+    resolver: yupResolver(schema),
+  });
   const { id } = useParams();
-  const { authState, checkAuth } = useAuth();
+  const { authState, checkAuth, setOpen, textNotify, setTextNotify } =
+    useAuth();
+  const [postDetails, setPostDetails] = useState("");
+  const [postComments, setPostComments] = useState("");
+
+  const [commentOpen, setCommentOpen] = useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setCommentOpen(false);
+  };
 
   useEffect(() => {
     FetchData();
     checkAuth();
-  }, []);
+  }, [postComments.length]);
 
   const editPost = async (option) => {
     if (option === "postText") {
@@ -53,10 +91,14 @@ const Post = () => {
 
   const deletePost = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/posts/${id}`, {
+      const { data } = await axios.delete(`http://localhost:3001/posts/${id}`, {
         headers: { accessToken: localStorage.getItem("accessToken") },
       });
-      navigate("/");
+      if (!data.error) {
+        setTextNotify("Post has been deleted");
+        setOpen(true);
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -70,15 +112,19 @@ const Post = () => {
           headers: { accessToken: localStorage.getItem("accessToken") },
         }
       );
-      console.log(data);
+
       const updatedComments = postComments.toSpliced(key, 1);
       setPostComments([...updatedComments]);
+      if (!data.error) {
+        setTextNotify("Comment has been deleted");
+        setCommentOpen(true);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const addComment = async () => {
+  const addComment = async ({ newComment }) => {
     try {
       const { data } = await axios.post(
         "http://localhost:3001/comments/",
@@ -93,16 +139,18 @@ const Post = () => {
         }
       );
       if (data.error) return alert(data.error);
-      setNewComment("");
-      console.log(data);
+
       setPostComments([...postComments, data]);
+      if (!data.error) {
+        reset();
+        setTextNotify("Comment has been added");
+        setCommentOpen(true);
+      }
     } catch (error) {
       console.log(error);
     }
   };
-  const [postDetails, setPostDetails] = useState("");
-  const [postComments, setPostComments] = useState("");
-  const [newComment, setNewComment] = useState("");
+
   const navigate = useNavigate();
   const FetchData = async () => {
     try {
@@ -149,30 +197,49 @@ const Post = () => {
           <CardContent
             sx={{
               display: "flex",
+              width: "100%",
               flexDirection: "column",
               justifyContent: "space-between",
             }}
           >
-            <Typography
-              onClick={() => {
-                if (postDetails.username === authState.username)
-                  editPost("title");
-              }}
+            <Box
+              display="flex"
+              bgcolor="rgb(245, 245, 245)"
+              width="100%"
+              justifyContent="center"
+              paddingY="0.5rem"
+              borderRadius="0.5rem"
+              marginBottom="1rem"
             >
-              {" "}
-              {postDetails.title}
-            </Typography>
+              <Typography
+                onClick={() => {
+                  if (postDetails.username === authState.username)
+                    editPost("title");
+                }}
+              >
+                {" "}
+                {postDetails.title}
+              </Typography>
+            </Box>
 
-            <Typography
-              onClick={() => {
-                if (postDetails.username === authState.username)
-                  editPost("postText");
-              }}
+            <Box
+              display="flex"
+              height="stretch"
+              paddingY="0.5rem"
+              borderRadius="0.5rem"
+              width="100%"
             >
-              {" "}
-              {postDetails.postText}
-            </Typography>
-            <Typography> {postDetails.username}</Typography>
+              <Typography
+                onClick={() => {
+                  if (postDetails.username === authState.username)
+                    editPost("postText");
+                }}
+              >
+                {" "}
+                {postDetails.postText}
+              </Typography>
+            </Box>
+            <Typography>@{postDetails.username}</Typography>
           </CardContent>
         </Card>
 
@@ -208,17 +275,28 @@ const Post = () => {
           padding: "2rem",
         }}
       >
-        <div style={{ display: "flex", gap: "1rem" }}>
-          <TextField
-            type="text"
-            placeholder="Put your comment down"
-            onChange={(e) => setNewComment(e.target.value)}
-            value={newComment}
+        <form
+          onSubmit={handleSubmit(addComment)}
+          style={{ display: "flex", gap: "1rem" }}
+        >
+          <Controller
+            name="newComment"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...register("newComment")}
+                autoComplete="false"
+                label="Put your comment down"
+                {...field}
+                error={!!errors.newComment}
+                helperText={errors.newComment ? errors.newComment.message : ""}
+              />
+            )}
           />
-          <Button variant="outlined" onClick={addComment} size="large">
+          <Button variant="outlined" type="submit" size="large">
             Add Comment
           </Button>
-        </div>
+        </form>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
           {postComments.length !== 0 ? (
@@ -256,6 +334,20 @@ const Post = () => {
           )}
         </div>
       </div>
+      <Snackbar
+        open={commentOpen}
+        autoHideDuration={3000}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {textNotify}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

@@ -16,6 +16,8 @@ export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
     ...initialState,
   });
+  const [open, setOpen] = useState(false);
+  const [textNotify, setTextNotify] = useState("");
 
   const checkAuth = async () => {
     try {
@@ -40,8 +42,12 @@ export const AuthProvider = ({ children }) => {
   };
   const value = {
     authState: authState,
+    open,
+    setOpen,
     setAuthState,
     checkAuth,
+    textNotify,
+    setTextNotify,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
