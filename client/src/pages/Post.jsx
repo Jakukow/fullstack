@@ -1,11 +1,9 @@
 import {
-  Alert,
   Box,
   Button,
   Card,
   CardContent,
   IconButton,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -39,20 +37,9 @@ const Post = () => {
     resolver: yupResolver(schema),
   });
   const { id } = useParams();
-  const { authState, checkAuth, setOpen, textNotify, setTextNotify } =
-    useAuth();
+  const { authState, checkAuth, setOpen, setTextNotify } = useAuth();
   const [postDetails, setPostDetails] = useState("");
   const [postComments, setPostComments] = useState("");
-
-  const [commentOpen, setCommentOpen] = useState(false);
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setCommentOpen(false);
-  };
 
   useEffect(() => {
     FetchData();
@@ -117,7 +104,7 @@ const Post = () => {
       setPostComments([...updatedComments]);
       if (!data.error) {
         setTextNotify("Comment has been deleted");
-        setCommentOpen(true);
+        setOpen(true);
       }
     } catch (error) {
       console.log(error);
@@ -144,7 +131,7 @@ const Post = () => {
       if (!data.error) {
         reset();
         setTextNotify("Comment has been added");
-        setCommentOpen(true);
+        setOpen(true);
       }
     } catch (error) {
       console.log(error);
@@ -337,20 +324,6 @@ const Post = () => {
           )}
         </div>
       </div>
-      <Snackbar
-        open={commentOpen}
-        autoHideDuration={3000}
-        onClose={handleClose}
-      >
-        <Alert
-          onClose={handleClose}
-          severity="success"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {textNotify}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

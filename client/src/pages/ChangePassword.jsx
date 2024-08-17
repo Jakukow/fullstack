@@ -1,28 +1,43 @@
 import axios from "axios";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
+
 import { Button, TextField } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+import useAuth from "../helpers/AuthContext";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useNavigate } from "react-router-dom";
+
+const schema = yup
+  .object()
+  .shape({
+    oldPassword: yup.string().required("Old password is required"),
+    newPassword: yup.string().required("New password is required"),
+  })
+  .required();
 
 const ChangePassword = () => {
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [open, setOpen] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [isError, setIsError] = useState(false);
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
   const navigate = useNavigate();
+  const {
+    control,
+    clearErrors,
 
-  const changePass = async () => {
+    handleSubmit,
+    register,
+    setError,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      oldPassword: "",
+      newPassword: "",
+    },
+    resolver: yupResolver(schema),
+    mode: "onSubmit",
+  });
+
+  const { setOpen, setTextNotify } = useAuth();
+
+  const changePass = async ({ oldPassword, newPassword }) => {
     try {
       const { data } = await axios.put(
         "http://localhost:3001/auth/changepassword",
@@ -36,11 +51,13 @@ const ChangePassword = () => {
           },
         }
       );
-      console.log(data);
       if (data.error) {
-        setIsError(true);
-        setErrorMsg(data.error);
+        setError("oldPassword", { message: data.error });
+        setError("newPassword", { message: data.error });
+      } else {
         setOpen(true);
+        setTextNotify("Password has been changed");
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
@@ -69,42 +86,57 @@ const ChangePassword = () => {
         <h1>
           <strong>Change Your Password</strong>
         </h1>
-        <form onSubmit={changePass} style={{ display: "flex", gap: "1rem" }}>
-          <TextField
-            required
-            error={isError}
-            value={oldPassword}
-            type="password"
-            placeholder="Old Password"
-            onChange={(e) => {
-              if (isError) setIsError(false);
-              setOldPassword(e.target.value);
-            }}
+        <form
+          onSubmit={handleSubmit(changePass)}
+          style={{ display: "flex", gap: "1rem" }}
+        >
+          <Controller
+            name="oldPassword"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                type="password"
+                {...register("oldPassword")}
+                error={!!errors.oldPassword}
+                helperText={
+                  errors.oldPassword ? errors.oldPassword.message : ""
+                }
+                label="Old Password"
+                {...field}
+                onChange={async (e) => {
+                  clearErrors("oldPassword");
+
+                  field.onChange(e);
+                }}
+              />
+            )}
           />
-          <TextField
-            required
-            type="password"
-            placeholder="New Password"
-            value={newPassword}
-            onChange={(e) => {
-              setNewPassword(e.target.value);
-            }}
+
+          <Controller
+            name="newPassword"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                type="password"
+                {...register("newPassword")}
+                error={!!errors.newPassword}
+                helperText={
+                  errors.newPassword ? errors.newPassword.message : ""
+                }
+                label="New Password"
+                {...field}
+                onChange={async (e) => {
+                  clearErrors("newPassword");
+                  field.onChange(e);
+                }}
+              />
+            )}
           />
           <Button type="submit" variant="outlined">
             Save Changes
           </Button>
         </form>
       </div>
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-        <Alert
-          onClose={handleClose}
-          severity="error"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {errorMsg}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

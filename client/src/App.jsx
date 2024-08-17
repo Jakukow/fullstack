@@ -10,20 +10,23 @@ import { AuthProvider } from "./helpers/AuthContext";
 import PageNotFound from "./pages/PageNotFound";
 import Profile from "./pages/Profile";
 import ChangePassword from "./pages/ChangePassword";
+import Layout from "./helpers/Layout";
 
 function App() {
   return (
     <div>
       <AuthProvider>
         <Routes>
-          <Route index element={<Home />} />
-          <Route path="/createpost" element={<CreatePost />} />
-          <Route path="/post/:id" element={<Post />} />
-          <Route path="/profile/:id" element={<Profile />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/sigin" element={<Sigin />} />
-          <Route path="/changePassword" element={<ChangePassword />} />
-          <Route path="*" element={<PageNotFound />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="/createpost" element={<CreatePost />} />
+            <Route path="/post/:id" element={<Post />} />
+            <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/sigin" element={<Sigin />} />
+            <Route path="/changePassword" element={<ChangePassword />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Route>
         </Routes>
       </AuthProvider>
     </div>

@@ -1,4 +1,4 @@
-import { Alert, Button, Snackbar, TextField, Typography } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../helpers/AuthContext";
@@ -32,15 +32,7 @@ export const Login = () => {
     mode: "onSubmit",
   });
 
-  const { setAuthState, open, setOpen, textNotify } = useAuth();
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
+  const { setAuthState } = useAuth();
 
   const navigate = useNavigate();
   const login = async ({ username, password }) => {
@@ -132,16 +124,6 @@ export const Login = () => {
           </Link>
         </Typography>
       </form>
-      <Snackbar open={open} autoHideDuration={1000} onClose={handleClose}>
-        <Alert
-          onClose={handleClose}
-          severity="success"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {textNotify}
-        </Alert>
-      </Snackbar>
     </main>
   );
 };

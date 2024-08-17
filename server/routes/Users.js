@@ -60,7 +60,7 @@ router.put("/changepassword", validateToken, async (req, res) => {
   try {
     const match = await bcrypt.compare(oldPassword, user.password);
     if (!match) res.json({ error: "Password doesn't match" });
-    const hash = await bcrypt.hash(newPassword, 100);
+    const hash = await bcrypt.hash(newPassword, 10);
     Users.update(
       { password: hash },
       { where: { username: req.user.username } }

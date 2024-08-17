@@ -1,4 +1,4 @@
-import { Alert, Button, IconButton, Snackbar } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,16 +11,7 @@ const Home = () => {
   const [listOfPosts, setListOfPosts] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]);
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  const { setAuthState, authState, checkAuth, setOpen, open, textNotify } =
-    useAuth();
+  const { setAuthState, authState, checkAuth } = useAuth();
   const navigate = useNavigate();
   const logout = () => {
     localStorage.removeItem("accessToken");
@@ -168,16 +159,6 @@ const Home = () => {
           );
         })}
       </main>
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-        <Alert
-          onClose={handleClose}
-          severity="success"
-          variant="filled"
-          sx={{ width: "100%" }}
-        >
-          {textNotify}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };
