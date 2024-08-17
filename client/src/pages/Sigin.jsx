@@ -3,20 +3,53 @@ import axios from "axios";
 
 import { Controller, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import useAuth from "../helpers/AuthContext";
 
+const schema = yup
+
+  .object()
+  .shape({
+    username: yup.string().required("Username is required"),
+    password: yup.string().required("Password is required"),
+  })
+  .required();
 const Sigin = () => {
   const navigate = useNavigate();
-  const { control, handleSubmit } = useForm({
+  const {
+    control,
+    clearErrors,
+
+    handleSubmit,
+    register,
+    setError,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       username: "",
       password: "",
     },
+    resolver: yupResolver(schema),
+    mode: "onSubmit",
   });
 
-  const onSubmit = (data) => {
-    axios.post("http://localhost:3001/auth", data).then((response) => {
-      console.log(response);
-    });
+  const { setOpen, setTextNotify } = useAuth();
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post("http://localhost:3001/auth", data);
+      if (response.data.error) {
+        setError("username", { message: response.data.error });
+        setError("password", { message: response.data.error });
+      } else {
+        setTextNotify("User has been successfully created!");
+        setOpen(true);
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -39,14 +72,38 @@ const Sigin = () => {
         <Controller
           name="username"
           control={control}
-          render={({ field }) => <TextField label="Username" {...field} />}
+          render={({ field }) => (
+            <TextField
+              {...register("username")}
+              error={!!errors.username}
+              helperText={errors.username ? errors.username.message : ""}
+              label="Username"
+              {...field}
+              onChange={async (e) => {
+                clearErrors("username");
+
+                field.onChange(e);
+              }}
+            />
+          )}
         />
 
         <Controller
           name="password"
           control={control}
           render={({ field }) => (
-            <TextField type="password" label="Password" {...field} />
+            <TextField
+              type="password"
+              {...register("password")}
+              error={!!errors.password}
+              helperText={errors.password ? errors.password.message : ""}
+              label="Password"
+              {...field}
+              onChange={async (e) => {
+                clearErrors("password");
+                field.onChange(e);
+              }}
+            />
           )}
         />
         <Button type="submit" variant="outlined">

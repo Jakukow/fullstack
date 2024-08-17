@@ -21,12 +21,13 @@ router.post("/", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
+
   const user = await Users.findOne({ where: { username: username } });
-  if (!user) console.error("User not found");
+  if (!user) res.json({ error: "Wrong username or password" });
   else {
     try {
       const match = await bcrypt.compare(password, user.password);
-      if (!match) console.error("Wrong username or Password");
+      if (!match) res.json({ error: "Wrong username or password" });
       const accessToken = sign(
         { username: user.username, id: user.id },
         "secret"

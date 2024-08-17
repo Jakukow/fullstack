@@ -239,7 +239,10 @@ const Post = () => {
                 {postDetails.postText}
               </Typography>
             </Box>
-            <Typography>@{postDetails.username}</Typography>
+            <hr />
+            <Typography marginTop="1rem" textAlign="right">
+              {postDetails.username}
+            </Typography>
           </CardContent>
         </Card>
 
@@ -284,10 +287,10 @@ const Post = () => {
             control={control}
             render={({ field }) => (
               <TextField
-                {...register("newComment")}
                 autoComplete="false"
                 label="Put your comment down"
                 {...field}
+                {...register("newComment")}
                 error={!!errors.newComment}
                 helperText={errors.newComment ? errors.newComment.message : ""}
               />
